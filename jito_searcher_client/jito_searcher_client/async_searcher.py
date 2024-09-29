@@ -167,14 +167,13 @@ class AsyncSearcherInterceptor(
         )
 
 
-async def get_async_searcher_client(url: str, kp: Keypair) -> SearcherServiceStub:
+async def get_async_searcher_client(url: str) -> SearcherServiceStub:
     """
     Returns a Searcher Service client that intercepts requests and authenticates with the block engine.
     :param url: url of the block engine without http/https
     :param kp: keypair of the block engine
     :return: SearcherServiceStub which handles authentication on requests
     """
-    # Authenticate immediately
-    searcher_interceptor = AsyncSearcherInterceptor(url, kp)
-    if kp != None:
-        await searcher_interceptor.authenticate_if_needed()
+    credentials = ssl_channel_credentials()
+    channel = secure_channel(url, credentials)
+    return SearcherServiceStub(channel)
