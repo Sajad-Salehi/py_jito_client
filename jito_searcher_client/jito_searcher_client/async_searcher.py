@@ -50,22 +50,27 @@ class AsyncSearcherInterceptor(
         self._access_token: Optional[JwtToken] = None
         self._refresh_token: Optional[JwtToken] = None
 
-    async def intercept_unary_stream(
-        self,
-        continuation,
-        client_call_details,
-        request,
-    ):
-        await self.authenticate_if_needed()
+    def intercept_unary_stream(self, continuation, client_call_details, request):
+        if self._kp != None:
+            self.authenticate_if_needed()
 
-        client_call_details = self._insert_headers(
-            [("authorization", f"Bearer {self._access_token.token}")],
-            client_call_details,
-        )
+            client_call_details = self._insert_headers(
+                [("authorization", f"Bearer {self._access_token.token}")],
+                client_call_details,
+            )
 
-        call = await continuation(client_call_details, request)
+        return continuation(client_call_details, request)
 
-        return call
+    def intercept_unary_unary(self, continuation, client_call_details, request):
+        if self._kp != None:
+            self.authenticate_if_needed()
+
+            client_call_details = self._insert_headers(
+                [("authorization", f"Bearer {self._access_token.token}")],
+                client_call_details,
+            )
+
+        return continuation(client_call_details, request)
 
     async def intercept_unary_unary(
         self,
