@@ -175,11 +175,4 @@ async def get_async_searcher_client(url: str, kp: Keypair) -> SearcherServiceStu
     :return: SearcherServiceStub which handles authentication on requests
     """
     # Authenticate immediately
-    searcher_interceptor = AsyncSearcherInterceptor(url, kp)
-    await searcher_interceptor.authenticate_if_needed()
-
-    credentials = ssl_channel_credentials()
-    channel = secure_channel(url, credentials, interceptors=[searcher_interceptor])
-    channel._unary_stream_interceptors.append(searcher_interceptor)
-
-    return SearcherServiceStub(channel)
+    searcher_interceptor = await AsyncSearcherInterceptor(url, kp)

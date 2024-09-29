@@ -155,7 +155,7 @@ def get_searcher_client(url: str, kp: Keypair) -> SearcherServiceStub:
     :return: SearcherServiceStub which handles authentication on requests
     """
     # Authenticate immediately
-    
+
     searcher_interceptor = SearcherInterceptor(url, kp)
     if kp != None:
         searcher_interceptor.authenticate_if_needed()
