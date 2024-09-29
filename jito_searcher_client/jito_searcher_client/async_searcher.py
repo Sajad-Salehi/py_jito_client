@@ -178,4 +178,3 @@ async def get_async_searcher_client(url: str, kp: Keypair) -> SearcherServiceStu
     searcher_interceptor = AsyncSearcherInterceptor(url, kp)
     if kp != None:
         await searcher_interceptor.authenticate_if_needed()
-
